@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "groups_new")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,10 +21,15 @@ public class Group implements Serializable {
     private Long id;
 
     private String name;
+
     private Long countryAdmin;
+
     private Long stateAdmin;
+
     private Long cityAdmin;
+
     private Long districtAdmin;
+
     private Boolean status;
 
     @ManyToMany
@@ -32,5 +37,6 @@ public class Group implements Serializable {
     private Collection<User> users;
 
     @ManyToOne
+    @JoinColumn(name = "districts_id" , referencedColumnName = "id" ,nullable = false)
     private District district;
 }

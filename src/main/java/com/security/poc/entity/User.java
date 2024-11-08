@@ -33,17 +33,27 @@ public class User implements UserDetails, Serializable {
     private String email;
 
     private String username;
+
     private String password;
+
     private String primaryRole;
+
     private String groupRole;
 
     @ManyToOne
+    @JoinColumn(name = "countries_id" , referencedColumnName = "id")
     private Country country;
+
     @ManyToOne
+    @JoinColumn(name = "states_id" , referencedColumnName = "id")
     private State state;
+
     @ManyToOne
+    @JoinColumn(name = "cities_id" , referencedColumnName = "id")
     private City city;
+
     @ManyToOne
+    @JoinColumn(name = "districts_id")
     private District district;
 
     @CreationTimestamp
@@ -57,7 +67,6 @@ public class User implements UserDetails, Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

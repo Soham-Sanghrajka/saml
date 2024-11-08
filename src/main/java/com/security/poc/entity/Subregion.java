@@ -28,7 +28,7 @@ public class Subregion implements Serializable {
     private String translations;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "region_id", nullable = false)
+    @JoinColumn(name = "region_id", referencedColumnName = "id", nullable = false)
     private Region region;
 
     @Column(name = "created_at")
