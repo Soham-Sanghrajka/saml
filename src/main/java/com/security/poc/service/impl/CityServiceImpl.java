@@ -27,6 +27,11 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    public List<City> getCitiesByStateId(Long stateId) {
+        return cityRepository.findByState_Id(stateId);
+    }
+
+    @Override
     public City createCity(City city) {
         return cityRepository.save(city);
     }
