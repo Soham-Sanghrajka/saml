@@ -24,15 +24,15 @@ public class City implements Serializable {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "state_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "state_id", referencedColumnName = "id", nullable = false)
     private State state;
 
     @Column(name = "state_code", nullable = false, length = 255)
     private String stateCode;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "country_id", referencedColumnName = "id", nullable = false)
     private Country country;
 
     @Column(name = "country_code", nullable = false, length = 2)

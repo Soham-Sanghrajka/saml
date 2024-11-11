@@ -26,7 +26,7 @@ public class State implements Serializable {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
+    @JoinColumn(name = "country_id", referencedColumnName = "id", nullable = false)
     private Country country;
 
     @Column(name = "country_code", nullable = false, length = 2)

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Collection;
 
 @Entity
 @Table(name = "countries")
@@ -58,14 +59,14 @@ public class Country implements Serializable {
     private String region;
 
     @ManyToOne
-    @JoinColumn(name = "region_id")
+    @JoinColumn(name = "region_id",referencedColumnName = "id")
     private Region regionEntity;
 
     @Column(name = "subregion", length = 255)
     private String subregion;
 
     @ManyToOne
-    @JoinColumn(name = "subregion_id")
+    @JoinColumn(name = "subregion_id",referencedColumnName = "id")
     private Subregion subregionEntity;
 
     @Column(name = "nationality", length = 255)
@@ -102,4 +103,11 @@ public class Country implements Serializable {
 
     @Column(name = "wikiDataId", length = 255)
     private String wikiDataId;
+
+    @OneToMany(mappedBy = "country" , fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+    private Collection<State> states;
+
+    @OneToMany(mappedBy = "country" , fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+    private Collection<City> cities;
+
 }

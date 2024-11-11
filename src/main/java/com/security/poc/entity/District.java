@@ -20,6 +20,8 @@ public class District implements Serializable {
     private Long id;
 
     private String name;
+
     @ManyToOne
+    @JoinColumn(name = "cities_id", referencedColumnName = "id", nullable = false)
     private City city;
 }
