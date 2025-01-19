@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface UserService {
     List<User> allUsers();
+
+    User findById(Long userId);
 }

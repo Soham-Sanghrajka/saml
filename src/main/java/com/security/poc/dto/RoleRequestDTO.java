@@ -3,10 +3,10 @@ package com.security.poc.dto;
 
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 public class RoleRequestDTO {
     private String name;
-    private List<Long> privilegeIds;
+    private Set<Long> privilegeIds;
 }

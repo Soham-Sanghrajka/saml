@@ -12,8 +12,7 @@ import com.security.poc.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +27,14 @@ public class RoleServiceImpl implements RoleService {
         Role role = new Role();
         role.setName(roleRequestDTO.getName());
 
-        if (roleRequestDTO.getPrivilegeIds() != null && !roleRequestDTO.getPrivilegeIds().isEmpty()) {
-            Collection<Privilege> privileges = privilegeRepository.findAllById(roleRequestDTO.getPrivilegeIds());
-            role.setPrivileges(privileges);
-        }
+        Optional.ofNullable(roleRequestDTO.getPrivilegeIds())
+                .filter(privilegeIds -> !privilegeIds.isEmpty()) // Filter out empty lists
+                .ifPresent(privilegeIds -> {
+                    // Fetch privileges and ensure they exist before assigning
+                    Set<Privilege> privileges = new HashSet<>(privilegeRepository.findAllById(privilegeIds));
+                    role.setPrivileges(privileges);
+                });
+
         return roleRepository.save(role);
     }
 
@@ -50,7 +53,7 @@ public class RoleServiceImpl implements RoleService {
 
         if (roleRequestDTO.getPrivilegeIds() != null && !roleRequestDTO.getPrivilegeIds().isEmpty()) {
             Collection<Privilege> privileges = privilegeRepository.findAllById(roleRequestDTO.getPrivilegeIds());
-            role.setPrivileges(privileges);
+            role.setPrivileges((Set<Privilege>) privileges);
         }
 
         return roleRepository.save(role);

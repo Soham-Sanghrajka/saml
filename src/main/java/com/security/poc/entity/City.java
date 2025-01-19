@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 public class City implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
@@ -44,7 +44,7 @@ public class City implements Serializable {
     @Column(name = "longitude", precision = 11, scale = 8, nullable = false)
     private BigDecimal longitude;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
     @Column(name = "updated_at", nullable = false)

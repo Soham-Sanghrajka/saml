@@ -1,5 +1,8 @@
 package com.security.poc.service.impl;
 
+import com.security.poc.constant.OperationType;
+import com.security.poc.constant.ResourceType;
+import com.security.poc.dto.PrivilegeRequestDTO;
 import com.security.poc.entity.Privilege;
 import com.security.poc.entity.Role;
 import com.security.poc.exception.ResourceNotFoundException;
@@ -20,10 +23,16 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     private final RoleRepository roleRepository;
 
     @Override
-    public Privilege createPrivilege(String name) {
+    public Privilege createPrivilege(PrivilegeRequestDTO privilegeRequest) {
         Privilege privilege = new Privilege();
-        privilege.setName(name);
+        privilege.setName(generatePermissionName(privilegeRequest.getResourceType(), privilegeRequest.getOperation()));
+        privilege.setResourceType(privilegeRequest.getResourceType());
+        privilege.setOperation(privilegeRequest.getOperation());
         return privilegeRepository.save(privilege);
+    }
+
+    private String generatePermissionName(ResourceType resourceType, OperationType operation) {
+        return resourceType.name() + "_" + operation.name();
     }
 
     @Override
@@ -60,7 +69,6 @@ public class PrivilegeServiceImpl implements PrivilegeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Privilege not found with id " + privilegeId));
 
         Collection<Role> roles = roleRepository.findAllById(roleIds);
-        privilege.getRoles().addAll(roles);
 
         return privilegeRepository.save(privilege);
     }
@@ -73,8 +81,6 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found with id " + roleId));
 
-        privilege.getRoles().remove(role);
-
         privilegeRepository.save(privilege);
     }
 
@@ -83,6 +89,6 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         Privilege privilege = privilegeRepository.findById(privilegeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Privilege not found with id " + privilegeId));
 
-        return new ArrayList<>(privilege.getRoles());
+        return new ArrayList<>();
     }
 }

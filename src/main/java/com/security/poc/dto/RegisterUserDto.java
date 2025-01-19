@@ -26,12 +26,6 @@ public class RegisterUserDto {
     @NotNull(message = "role is required")
     private List<Long> roleIds;
 
-    @NotBlank(message = "Primary role is required")
-    private String primaryRole;
-
-    @NotBlank(message = "Group role is required")
-    private String groupRole;
-
     @NotNull(message = "Country ID is required")
     private Long countryId;
 

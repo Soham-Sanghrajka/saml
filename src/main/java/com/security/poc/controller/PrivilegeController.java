@@ -8,6 +8,7 @@ import com.security.poc.service.PrivilegeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/privileges")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('SUPER_ADMIN')")
 public class PrivilegeController {
 
     private final PrivilegeService privilegeService;
@@ -22,7 +24,7 @@ public class PrivilegeController {
     // Create a new Privilege
     @PostMapping
     public ResponseEntity<Privilege> createPrivilege(@RequestBody PrivilegeRequestDTO privilegeRequestDTO) {
-        Privilege privilege = privilegeService.createPrivilege(privilegeRequestDTO.getName());
+        Privilege privilege = privilegeService.createPrivilege(privilegeRequestDTO);
         return new ResponseEntity<>(privilege, HttpStatus.CREATED);
     }
 

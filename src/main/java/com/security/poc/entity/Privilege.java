@@ -1,5 +1,7 @@
 package com.security.poc.entity;
 
+import com.security.poc.constant.OperationType;
+import com.security.poc.constant.ResourceType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,12 +18,17 @@ import java.util.Collection;
 public class Privilege implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "privileges")
-    private Collection<Role> roles;
+    @Enumerated(EnumType.STRING)
+    private ResourceType resourceType;
+
+    @Enumerated(EnumType.STRING)
+    private OperationType operation;
+
 }

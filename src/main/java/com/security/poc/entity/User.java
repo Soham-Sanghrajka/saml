@@ -1,5 +1,6 @@
 package com.security.poc.entity;
 
+import com.security.poc.constant.AdminLevel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +8,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -22,7 +22,7 @@ import java.util.List;
 public class User implements UserDetails, Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
@@ -34,16 +34,18 @@ public class User implements UserDetails, Serializable {
 
     private String username;
     private String password;
-    private String primaryRole;
-    private String groupRole;
 
     @ManyToOne
+    @JoinColumn(name = "country_id", nullable = false)
     private Country country;
     @ManyToOne
+    @JoinColumn(name = "state_id", nullable = false)
     private State state;
     @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
     private City city;
     @ManyToOne
+    @JoinColumn(name = "district_id", nullable = false)
     private District district;
 
     @CreationTimestamp
@@ -58,9 +60,47 @@ public class User implements UserDetails, Serializable {
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        // Add role-based authorities
+        roles.forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+
+            // Add permissions from each role
+            if (role.getPrivileges() != null) {
+                role.getPrivileges().forEach(permission -> {
+                    authorities.add(new SimpleGrantedAuthority(permission.getName()));
+                });
+            }
+        });
+
+        return authorities;
+    }
+
+
+    public boolean hasRole(String roleName) {
+        return roles.stream()
+                .anyMatch(role -> role.getName().equals(roleName));
+    }
+
+    public boolean hasPermission(String permissionName) {
+        return roles.stream()
+                .anyMatch(role -> role.hasPermission(permissionName));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 }
