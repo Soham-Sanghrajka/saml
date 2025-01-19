@@ -7,5 +7,5 @@ public class RoleConstants {
     public static final String ROLE_STATE_ADMIN = "ROLE_STATE_ADMIN";
     public static final String ROLE_CITY_ADMIN = "ROLE_CITY_ADMIN";
     public static final String ROLE_DISTRICT_ADMIN = "ROLE_DISTRICT_ADMIN";
-    public static final String ROLE_CHAPTER_ADMIN = "ROLE_DISTRICT_ADMIN";
+    public static final String ROLE_CHAPTER_ADMIN = "ROLE_CHAPTER_ADMIN";
 }

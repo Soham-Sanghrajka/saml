@@ -77,6 +77,7 @@ public class GeographicPermissionEvaluator implements PermissionEvaluator {
             case RoleConstants.ROLE_STATE_ADMIN -> checkStateAccess(user, group);
             case RoleConstants.ROLE_CITY_ADMIN -> checkCityAccess(user, group);
             case RoleConstants.ROLE_DISTRICT_ADMIN -> checkDistrictAccess(user, group);
+            case RoleConstants.ROLE_CHAPTER_ADMIN -> checkChapterAccess(user, group);
             default -> false;
         };
     }
@@ -123,6 +124,13 @@ public class GeographicPermissionEvaluator implements PermissionEvaluator {
                 .equals(group.getDistrict().getCity().getState().getName())
                 && user.getCountry().getName()
                 .equals(group.getDistrict().getCity().getCountry().getName());
+    }
+
+    private boolean checkChapterAccess(User user, Group group) {
+        return user.getRoles().stream()
+                .anyMatch(r -> r.getName().equals(RoleConstants.ROLE_CHAPTER_ADMIN))
+                && group.getUserGroupRoles().stream()
+                .anyMatch(ugr -> ugr.getUser().getId().equals(user.getId()));
     }
 
     private boolean checkOperationPermission(User user, String permission) {
